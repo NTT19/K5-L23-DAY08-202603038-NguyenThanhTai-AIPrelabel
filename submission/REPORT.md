@@ -6,14 +6,14 @@
 
 | Lớp | Model + cỡ | Ngưỡng | Vì sao (dẫn `run_id` trong `model_log.csv`) |
 |---|---|---|---|
-| person / bicycle / motorbike / car / bus / truck | <<YOLO26m>> | <<theo lớp, từ threshold_sweep>> | <<>> |
-| three_wheeler | <<YOLOE-26s, prompt: ...>> | <<>> | <<>> |
+| person / bicycle / motorbike / car / bus / truck | YOLO26m | Tạm conf=0.25; chốt theo sweep Part 3 | r02 có 215 box ở 0.25; r03 còn 139 ở 0.5 nhưng giảm person 131→87 và motorbike 55→32. r06 chạy 0.05 trên cả 36 ảnh làm nguồn sweep. |
+| three_wheeler | YOLOE-26s; prompt mặc định tuk-tuk / cyclo / cargo tricycle | Tạm conf=0.25; chốt theo sweep Part 3 | r04 tìm được xe ba gác ở img_002 (0.93) và xe ba bánh ở img_032 (0.48/0.92/0.27); r07 tạo 125 candidate toàn bộ 36 ảnh ở 0.05. |
 
-- Lệnh `merge_prelabels.py` đã dùng (dán nguyên): <<>>
-- **Phiên bản SAM bạn chọn** (SAM 1 / 2.1 / 3) và lý do: <<chất lượng mask, tốc độ, RAM, quyền truy cập>>
-- Lỗi nào **không sửa được bằng đổi ngưỡng** (ví dụ tuk-tuk bị gọi `car`)? Sửa thế nào? <<>>
-- Box **điểm cao mà sai** hoặc **điểm thấp mà đúng** (ảnh nào): <<>>
-- Giới hạn: chọn ngưỡng trên chính gold (4 ảnh) nên số đo máy trên gold là lạc quan: <<>>
+- Lệnh `merge_prelabels.py`: chưa chạy; dự kiến ghép `work/prelabel/yoloe_all/pre.coco.json` với `work/prelabel/y26_all/pre.coco.json` sau khi hoàn tất sweep Part 3. YOLOE sẽ cung cấp `three_wheeler`; khi chồng với `car`/`truck`, quy tắc merge của script ưu tiên nhãn `three_wheeler`.
+- **Phiên bản SAM chọn cho Part 5:** SAM 2.1 base (`sam2.1_b.pt`, run r05). Checkpoint chạy được trên CPU và tạo 16 mask ở 2 ảnh, 14.82 giây/ảnh; chưa so với bản khác nên đây là lựa chọn thực dụng, chưa phải kết luận bản tốt nhất.
+- Lỗi **không sửa được bằng đổi ngưỡng:** YOLO26 không có lớp `three_wheeler`; tuk-tuk ở img_002 không được gán lớp này và xe ba bánh ở img_032 bị gọi `bicycle`. Dùng YOLOE cho lớp `three_wheeler`, sau đó merge và review nhãn.
+- Box **điểm thấp mà có vẻ đúng:** ở img_032, YOLOE dự đoán `three_wheeler` 0.27 trên xe ba bánh phía phải; cần kiểm bằng guideline nhưng không nên loại chỉ vì score thấp (r04). Box ngưỡng cao cũng không tự bảo đảm đúng lớp.
+- Giới hạn: chưa chạy `threshold_sweep.py`; ngưỡng 0.25 ở trên chỉ là baseline từ pilot. Part 3 sẽ chọn ngưỡng trên 4 ảnh gold; vì chọn và chấm trên cùng gold nên số đo máy trên gold có thể lạc quan và mẫu nhỏ.
 
 ## 2. AI error profile (từ `qc/review_stats.md`)
 
