@@ -25,27 +25,29 @@
 
 | Trạng thái | Số | Tỉ lệ | Mẫu số |
 |---|---|---|---|
-| accepted | <<>> | <<>> | <<box máy>> |
-| edited | <<>> | <<>> | <<>> |
-| deleted | <<>> | <<>> | <<>> |
-| added | <<>> | <<>> | <<đối tượng sau duyệt>> |
+| accepted | 421 | 81.1% | 519 box máy |
+| edited | 38 | 7.3% | 519 box máy |
+| deleted | 49 | 9.4% | 519 box máy |
+| added | 62 | 11.9% | 521 đối tượng sau duyệt |
 
-- Lớp nào máy tệ nhất? Vì sao (dẫn ảnh)? <<>>
-- So với gold: precision / recall của **máy** <<>> (mẫu số: <<đối tượng gold>>)
+- Trong `deleted + added`, script nhận diện 12 trường hợp đổi lớp; ước tính số vật máy bỏ sót thật là `62 - 12 = 50` (`review_stats.md`). Số đo loại 23 đối tượng quanh bẫy khỏi profile.
+- `three_wheeler` có số box máy bị xóa cao nhất: 21/40 box máy của lớp này (12 accepted + 7 edited + 21 deleted). Ở img_003, pre-label có nhiều box chồng lên cùng xe ba gác xanh; hai box lớn có điểm 0.90 và 0.80, trong khi nhãn sau review giữ một box. Đây là ví dụ box trùng/lỏng; tổng deleted cũng gồm trường hợp đổi lớp theo cách đếm của script.
+- So với gold: precision của **máy** `42/74 = 56.8%`; recall `42/73 = 57.5%` (73 đối tượng gold trên 4 ảnh; KTC 95% lần lượt 45–67% và 46–68%, từ `review_stats.md`).
 
 ## 3. Thiên kiến tự động hóa và ảnh bẫy
 
-- Bắt bẫy: <<.../12>>; loại nào lọt: <<>>; vì sao (bạn đã bỏ bước nào của checklist)? <<>>
-- Accepted cao mà bắt bẫy thấp (hoặc ngược lại) nói gì về cách bạn duyệt? <<>>
+- Output hiện tại ghi bắt được `11/12 = 91.7%` (loose 3/3, wrong_class 3/3, extra 3/3, missing 2/3); bẫy còn lọt là `missing` tại img_018. KTC 95% là 65–99% do chỉ có 12 bẫy (`review_stats.md`).
+- Lần thống kê trước trong lượt review ban đầu ghi `8/12 = 66.7%`; sau khi danh sách bẫy lọt đã được xem, nhãn được cập nhật và output hiện tại tăng lên 11/12. Vì vậy 11/12 là kết quả sau khắc phục, không phải phép đo mù ban đầu. Lý do cá nhân khiến bẫy `missing` ở img_018 lọt không có trong output; không thể suy ra checklist nào đã bị bỏ chỉ từ số liệu.
+- `accepted` hiện là 421/519 = 81.1%, nhưng số này chỉ đo mức khớp của box máy còn lại; nó không đo việc người review có phát hiện vật máy bỏ sót hay bẫy cài vào ảnh. Kết quả lượt đầu 8/12 cho thấy tỷ lệ accepted cao không đủ để kết luận quy trình review đã bắt lỗi tốt.
 
 ## 4. Máy có đáng dùng không?
 
-- Thời gian (từ `time_log.csv`): gán tay <<... phút/ảnh>> vs duyệt <<... phút/ảnh>>. Thiên lệch (bạn gán gold trước nên đã quen cảnh): <<>>
-- Kết luận: <<có / không / chỉ cho lớp nào>>, dựa trên <<số liệu>>
-- **Ba quy tắc giảm thiên kiến của bạn** (mỗi quy tắc kiểm tra được bằng số hoặc việc làm):
-  1. <<>>
-  2. <<>>
-  3. <<>>
+- Gán tay: `20/4 = 5 phút/ảnh`; review batch: `60/24 = 2.5 phút/ảnh` (`time_log.csv`), thấp hơn 50% theo số thời gian đã ghi. Đây không phải so sánh có kiểm soát: 4 ảnh gold được gán trước nên đã quen kiểu cảnh, và batch gồm ảnh khác.
+- Kết luận hiện tại: thời gian ghi nhận gợi ý pre-label có thể giúp review nhanh hơn, nhưng không thể quy toàn bộ chênh lệch cho pre-label vì mẫu ảnh khác nhau và có thiên lệch quen cảnh. Vẫn cần review thủ công: accepted 421/519 = 81.1%, added 62/521 = 11.9%, còn precision/recall trên gold là 56.8%/57.5% (4 ảnh).
+- **Ba quy tắc cho lượt review tiếp theo** (có thể kiểm tra bằng hành động):
+  1. Ẩn toàn bộ nhãn máy và tự quét/đếm vật trước khi hiện nhãn ở cả 24/24 ảnh.
+  2. Mỗi ảnh duyệt đủ bốn bước theo thứ tự: bỏ sót → thừa → sai lớp → box lỏng; ảnh đông quét theo góc phần tư.
+  3. Nghỉ 3–5 phút sau khoảng 10 ảnh; ghi giờ bắt đầu/kết thúc và break thực tế vào time log.
 
 ## 5. Mask SAM cho 3 vật (Part 5)
 
