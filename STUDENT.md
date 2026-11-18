@@ -5,7 +5,7 @@
 - Lớp (L2 / L3 / khác): L2
 - Tài khoản GitHub: NTT19
 - Repo bài nộp (URL): https://github.com/NTT19/K5-L23-DAY08-202603038-NguyenThanhTai-AIPrelabel (học viên xác nhận giảng viên cho phép tên hiện tại)
-- Commit chốt bài (hash): sẽ điền sau commit Part 6
+- Commit chốt nội dung bài (hash): `36696b30c7b56086f3dc4b8c031e3cab82e0ba84` (commit tiếp theo chỉ bổ sung hash này)
 - Máy: Windows 10 Pro; GPU Intel Iris Xe Graphics; các lần inference đã ghi log chạy CPU
 - CVAT (Docker): v2.74.1 (`cvat/server:v2.74.1`, kiểm tra image đang chạy)
 
