@@ -53,10 +53,13 @@
 
 | Ảnh | SAM (phiên bản) | Số click | Mask gồm người lái / hàng hoá? | Lỗi quan sát | File trong `masks/` |
 |---|---|---|---|---|---|
-| <<img_0xx>> | <<>> | <<>> | <<>> | <<>> | <<>> |
+| `img_013` | SAM 2.1 Base (`sam2.1_b.pt`) | 7 (2 dương, 5 âm) | Bản tinh chỉnh không gồm người lái và người phía sau khung; không thấy hàng hóa tách riêng để đánh giá. Bản 3-click đầu còn dính người. | Bản tinh chỉnh giảm lỗi dính người nhưng còn đốm/khuyết ở khung mảnh; SAM trả 3 polygon, 82 381 px (11,8% ảnh). | `tuktuk_img013_refined.jpg` |
+| `img_004` | SAM 2.1 Base (`sam2.1_b.pt`) | 4 (2 dương, 2 âm) | Không thấy người lái trên tuk-tuk được chọn; người đứng bên phải được loại. Không xác định được hàng hóa riêng trong khoang. | Bản đầu có điểm dương trên mặt đường và mask tràn dưới bánh trước; bản tinh chỉnh đổi điểm dương vào bánh, thêm điểm âm trên đường. Còn nhiễu nhỏ ở mép trên trái; 1 polygon, 91 779 px (13,1% ảnh). | `tuktuk_img004_refined.jpg` |
+| `img_032` | SAM 2.1 Base (`sam2.1_b.pt`) | 3 (2 dương, 1 âm) | Người đứng cạnh xích lô đã được loại; vùng khoang/vải phủ vẫn nằm trong mask. Không kết luận vùng đó là hàng hóa. | Mask theo được khoang và bánh xe; các thanh khung mảnh chưa thật đều; 1 polygon, 50 327 px (8,5% ảnh). | `cyclo_img032.jpg` |
 
-- Đối chiếu guideline mục 4.2: quy tắc nào giúp, quy tắc nào thiếu? <<>>
-- *(Tuỳ chọn)* Interactor SAM trong CVAT: làm được / không (lỗi gì, đã thử gì); khác gì offline: <<>>
+- Đối chiếu guideline mục 4.2: quy tắc bám biên phần nhìn thấy và tách vật chạm nhau không chồng lấn giúp xác định phạm vi mask. Ở `img_013`, một điểm âm trên thân người chưa đủ; thêm điểm âm trên đầu/chân người và người phía sau giúp loại các vùng đó. Câu hỏi về hàng hóa nhô ra vẫn chưa được chốt ở câu hỏi mở 3, mục 6 của guideline v1.0; vì vậy không suy rộng quy tắc hàng hóa từ ba ảnh này.
+- Các file `tuktuk_img013.jpg` và `tuktuk_img004.jpg` là lần chạy đầu, được giữ lại để đối chiếu lỗi với bản tinh chỉnh.
+- Interactor SAM trong CVAT: chưa thử; Part 5 dùng `sam2_points.py` offline nên chưa có so sánh trực tiếp.
 
 ## 6. Calibration (Part 6)
 
